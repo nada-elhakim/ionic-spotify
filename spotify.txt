@@ -1,0 +1,6 @@
+endpoints:
+  POST - https://i8su4jdgbh.execute-api.eu-central-1.amazonaws.com/dev/exchange
+  POST - https://i8su4jdgbh.execute-api.eu-central-1.amazonaws.com/dev/refresh
+functions:
+  exchangeCode: oauth-token-api-dev-exchangeCode
+  refreshToken: oauth-token-api-dev-refreshToken
