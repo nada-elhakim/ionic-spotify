@@ -23,6 +23,7 @@ node_modules/
 tmp/
 temp/
 hooks/
+spotify-api/app.js
 platforms/
 plugins/
 plugins/android.json
