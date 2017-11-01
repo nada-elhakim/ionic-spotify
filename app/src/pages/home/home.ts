@@ -26,8 +26,10 @@ export class HomePage {
   }
   //
   getToken(code) {
-    this.http.post('http://10.0.2.2:3000/exchangeToken', {code}).subscribe((response: Response) => {
+    this.http.post('https://wt-a2bb2074565f23a306bf71addf50c737-0.run.webtask.io/spotify-webtask', {code}).subscribe((response: Response) => {
       const body = response.json();
+      alert('success');
+      console.log(body);
       this.storage.ready().then(() => {
         this.storage.set('token', body.access_token);
         this.navCtrl.push('PlaylistPage');
@@ -49,6 +51,7 @@ export class HomePage {
           parsedResponse[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
         }
         if (parsedResponse["code"] !== undefined && parsedResponse["code"] !== null) {
+          console.log(parsedResponse["code"]);
           this.getToken(parsedResponse["code"]);
         } else {
           console.log("Problem authenticating with spotify");
