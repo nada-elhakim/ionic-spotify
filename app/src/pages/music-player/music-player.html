@@ -6,6 +6,8 @@
 
 <ion-content>
 
+
+
   <ion-item no-lines *ngIf="spotifyPlayer.track">
     <ion-range min="0" [max]="spotifyPlayer.durationS" [(ngModel)]="spotifyPlayer.currentPosition" color="primary">
       <ion-label range-left *ngIf="spotifyPlayer.currentPosition">{{ spotifyPlayer.currentPosition }}</ion-label>
@@ -19,4 +21,6 @@
       <ion-icon name="md-pause" *ngIf="spotifyPlayer.isPlaying"></ion-icon>
     </button></li>
   </ul>
+
+  <audio *ngIf="accountType !=='premium'" [src]="spotifyPlayer.previewUrl" #audioPlayer></audio>
 </ion-content>

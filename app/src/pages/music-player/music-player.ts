@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {MusicProvider} from "../../providers/music/music";
 import {SpotifyPlayerProvider} from "../../providers/spotify-player/spotify-player";
@@ -17,8 +17,8 @@ import {SpotifyPlayerProvider} from "../../providers/spotify-player/spotify-play
 })
 export class MusicPlayerPage implements OnInit {
   track;
-
-
+  profile;
+  @ViewChild('audioPlayer') audioPlayer: ElementRef;
 
   constructor(
     private musicservice: MusicProvider,
@@ -34,7 +34,9 @@ export class MusicPlayerPage implements OnInit {
   ionViewWillEnter() {
     console.log('will enter');
     this.track = this.navParams.get('track');
-    this.spotifyPlayer.setTrack(this.track);
+    this.profile = this.navParams.get('profile');
+    let audioPlayer = this.profile.product !== 'premium' ? this.audioPlayer : null;
+    this.spotifyPlayer.setTrack(this.track, audioPlayer);
   }
 
   ionViewWillLeave() {

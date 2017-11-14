@@ -52,7 +52,10 @@ export class PlaylistPage implements OnInit {
   }
 
   goToTrack(track) {
-    this.navCtrl.push('MusicPlayerPage', {track});
+    this.storage.get('spotify_profile').then((profile) => {
+      this.navCtrl.push('MusicPlayerPage', {track, profile});
+    })
+
   }
 
 }

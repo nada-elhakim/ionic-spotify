@@ -17,6 +17,9 @@ declare var cordova;
 export class SpotifyPlayerProvider {
   track;
   trackURI;
+  previewUrl;
+  accountType;
+  audioPlayer: HTMLAudioElement;
   isPlaying = false;
   isPaused = false;
   currentPosition = 0;
@@ -24,12 +27,17 @@ export class SpotifyPlayerProvider {
   progress;
   spotify = cordova.plugins.spotify;
   constructor(public http: Http, private storage: Storage) {
-
   }
 
-  setTrack(track) {
-    console.log(track);
+  setTrack(track, audioPlayer?) {
+
     this.track = track;
+    if (audioPlayer) {
+      console.log(audioPlayer);
+      console.log('free account');
+      this.audioPlayer = audioPlayer.nativeElement;
+      this.previewUrl = track.preview_url !== "" ? track.preview_url : null;
+    }
     this.durationS = this.track.duration_ms / 1000;
     this.trackURI = this.track ? this.track.uri : '';
   }
@@ -52,15 +60,20 @@ export class SpotifyPlayerProvider {
   }
 
   play() {
-    this.storage.get('token').then((token) => {
-      this.spotify.play(this.trackURI, {
-        clientId: SPOTIFY_CLIENT_ID,
-        token
-      }).then(() => {
-        this.isPlaying = true;
-        this.getTrackPosition();
+    if (this.accountType === 'premium') {
+      this.storage.get('token').then((token) => {
+        this.spotify.play(this.trackURI, {
+          clientId: SPOTIFY_CLIENT_ID,
+          token
+        }).then(() => {
+          this.isPlaying = true;
+          this.getTrackPosition();
+        });
       });
-    });
+    } else {
+      this.previewUrl && this.audioPlayer.play();
+      this.isPlaying = true;
+    }
   }
 
   getTrackPosition() {
@@ -81,9 +94,15 @@ export class SpotifyPlayerProvider {
   }
   pause() {
     console.log('pause');
-    this.spotify.pause().then(() => {
-      this.isPaused = true;
-    });
+    if (this.accountType === 'premium') {
+      this.spotify.pause().then(() => {
+        this.isPaused = true;
+      });
+    } else {
+      this.audioPlayer.pause();
+      this.isPlaying = false;
+    }
+
   }
 
   seekTo(positionMs) {
@@ -95,6 +114,11 @@ export class SpotifyPlayerProvider {
     this.spotify.resume().then(() => {
       this.isPaused = false;
     });
+  }
+
+  initAudioPlayerEvents() {
+    console.log('init audio events');
+    
   }
 
   resetPlayer() {

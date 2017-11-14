@@ -31,7 +31,7 @@ export class UserProvider {
     return Observable
       .fromPromise(this.storage.get('token'))
       .concatMap((token) => {
-      return this.http.get(SPOTIFY_PROFILE_ENDPOINT, this.setAuthorizationHeader(token));
+      return this.http.get(SPOTIFY_PROFILE_ENDPOINT, this.setAuthorizationHeader(token)).map(profile => profile.json());
     });
   }
 

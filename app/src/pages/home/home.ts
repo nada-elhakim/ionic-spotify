@@ -34,9 +34,13 @@ export class HomePage {
       this.storage.ready().then(() => {
         this.storage.set('token', body.access_token).then(() => {
           this.userProvider.getSpotifyProfile().subscribe((profile) => {
-            this.userProvider.saveSpotifyProfile(profile);
+            console.log(profile);
+            this.userProvider.saveSpotifyProfile(profile).subscribe(() => {
+              this.navCtrl.push('PlaylistPage');
+            });
+
           }, (error) => console.log(error));
-          this.navCtrl.push('PlaylistPage');
+
         });
       })
     }, (error) => console.log(error));
