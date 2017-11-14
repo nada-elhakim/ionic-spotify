@@ -52,7 +52,7 @@ export class PlaylistPage implements OnInit {
   }
 
   goToTrack(track) {
-    this.navCtrl.push('TrackDetailsPage', {track});
+    this.navCtrl.push('MusicPlayerPage', {track});
   }
 
 }

@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar class="default-header">
+    <div class="headerTitle">PLAYLIST</div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item no-lines *ngIf="spotifyPlayer.track">
+    <ion-range min="0" [max]="spotifyPlayer.durationS" [(ngModel)]="spotifyPlayer.currentPosition" color="primary">
+      <ion-label range-left *ngIf="spotifyPlayer.currentPosition">{{ spotifyPlayer.currentPosition }}</ion-label>
+      <!--<ion-label range-right *ngIf="musicservice.audioPlayer.duration">{{secondsToTime(musicservice.audioPlayer.duration) | date:'mm:ss'}}</ion-label>-->
+    </ion-range>
+  </ion-item>
+
+  <ul  id="nav">
+    <li ><button ion-button icon-only clear (click)="spotifyPlayer.togglePlayPause()">
+      <ion-icon name="md-play" *ngIf="!spotifyPlayer.isPlaying"></ion-icon>
+      <ion-icon name="md-pause" *ngIf="spotifyPlayer.isPlaying"></ion-icon>
+    </button></li>
+  </ul>
+</ion-content>

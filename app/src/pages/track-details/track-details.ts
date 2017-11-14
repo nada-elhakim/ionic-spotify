@@ -24,6 +24,7 @@ export class TrackDetailsPage implements OnInit {
   ngOnInit(): void {
 
     this.track = this.navParams.get('track');
+
     this.storage.ready().then(() => {
       this.storage.get('token').then((token) => {
         let headers: Headers = new Headers();
@@ -34,6 +35,10 @@ export class TrackDetailsPage implements OnInit {
           console.log(user);
           this.trackURI = `https://open.spotify.com/embed?uri=spotify:track:${this.track.uri}`;
           console.log(this.trackURI);
+
+          // Check whether the user has a free/open or premium account
+          // Play track preview if the account is free
+          // Play full track using cordova-spotify if premium
           if (user.product === 'open') {
             if (this.track.preview_url) {
               this.src = this.track.preview_url;
@@ -42,16 +47,10 @@ export class TrackDetailsPage implements OnInit {
           } else {
             this.free = false;
             cordova.plugins.spotify.play(this.track.uri, {
-              clientId: '1141cb8f9e66467d8cf514b799a3773e',
+              clientId: '',
               token
             });
           }
-
-          // cordova.plugins.spotify.play(this.track.uri, {
-          //   clientId: '1141cb8f9e66467d8cf514b799a3773e',
-          //   token
-          // });
-
         });
 
       });

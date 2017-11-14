@@ -14,6 +14,9 @@ import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {Http, HttpModule} from "@angular/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import {IonicStorageModule, Storage} from "@ionic/storage";
+import { SpotifyPlayerProvider } from '../providers/spotify-player/spotify-player';
+import { MusicProvider } from '../providers/music/music';
+import { UserProvider } from '../providers/user/user';
 
 @NgModule({
   declarations: [
@@ -42,7 +45,10 @@ import {IonicStorageModule, Storage} from "@ionic/storage";
     StatusBar,
     SplashScreen,
     InAppBrowser,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    SpotifyPlayerProvider,
+    MusicProvider,
+    UserProvider
   ]
 })
 export class AppModule {}

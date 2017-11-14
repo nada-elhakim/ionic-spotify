@@ -4,6 +4,7 @@ import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {Http, RequestOptions, Headers, Response} from "@angular/http";
 import {Subscription} from "rxjs/Subscription";
 import {Storage} from "@ionic/storage";
+import {UserProvider} from "../../providers/user/user";
 declare var cordova;
 
 @Component({
@@ -17,7 +18,7 @@ export class HomePage {
   secret = '1141cb8f9e66467d8cf514b799a3773e:6468c9dc1d48472a915d3552d0c27a36';
   authorizationCode = 'https://accounts.spotify.com/authorize/?client_id=1141cb8f9e66467d8cf514b799a3773e&response_type=code&redirect_uri=http://localhost/callback&scope=user-read-private%20user-library-read%20streaming&state=34fFs29kd09';
 
-  constructor(public navCtrl: NavController, private iab: InAppBrowser, private http: Http, private storage: Storage) {
+  constructor(public navCtrl: NavController, private iab: InAppBrowser, private http: Http, private storage: Storage, private userProvider: UserProvider) {
 
   }
 
@@ -31,8 +32,12 @@ export class HomePage {
       alert('success');
       console.log(body);
       this.storage.ready().then(() => {
-        this.storage.set('token', body.access_token);
-        this.navCtrl.push('PlaylistPage');
+        this.storage.set('token', body.access_token).then(() => {
+          this.userProvider.getSpotifyProfile().subscribe((profile) => {
+            this.userProvider.saveSpotifyProfile(profile);
+          }, (error) => console.log(error));
+          this.navCtrl.push('PlaylistPage');
+        });
       })
     }, (error) => console.log(error));
 
