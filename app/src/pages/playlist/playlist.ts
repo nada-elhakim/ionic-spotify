@@ -19,6 +19,14 @@ export class PlaylistPage implements OnInit {
   token: string;
   tracks: any = [];
   ngOnInit(): void {
+
+
+  }
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage, private http: Http) {
+  }
+
+  ionViewWillEnter() {
     this.storage.ready().then(() => {
       this.storage.get('token').then((token) => {
         console.log('playlist', token);
@@ -26,12 +34,7 @@ export class PlaylistPage implements OnInit {
         this.getMyTracks(token);
       })
     });
-
   }
-
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage, private http: Http) {
-  }
-
   ionViewDidLoad() {
     console.log('ionViewDidLoad PlaylistPage');
   }
@@ -53,6 +56,7 @@ export class PlaylistPage implements OnInit {
 
   goToTrack(track) {
     this.storage.get('spotify_profile').then((profile) => {
+      console.log(profile);
       this.navCtrl.push('MusicPlayerPage', {track, profile});
     })
 

@@ -33,7 +33,8 @@ export class MusicPlayerPage implements OnInit {
 
   ionViewWillEnter() {
     this.getNavParams();
-    this.spotifyPlayer.setTrack(this.track, this.audioPlayer);
+    if (this.profile.product === 'premium') this.audioPlayer = null;
+    this.spotifyPlayer.setTrack(this.track, this.profile, this.audioPlayer);
   }
 
   ionViewWillLeave() {

@@ -11,7 +11,7 @@
 
   <ng-container *ngIf="(accountType !=='premium' && track?.preview_url) || accountType ==='premium'">
     <ion-item no-lines>
-      <ion-range min="0" [max]="spotifyPlayer.durationS" [(ngModel)]="spotifyPlayer.currentPosition" color="primary" (ionChange)="spotifyPlayer.seekTo($event)">
+      <ion-range min="0" [max]="spotifyPlayer.durationS" [(ngModel)]="spotifyPlayer.currentPosition" color="primary" (ionChange)="spotifyPlayer.seekTo()">
         <ion-label range-left><span *ngIf="!spotifyPlayer.currentPosition">00:00</span><span *ngIf="spotifyPlayer.currentPosition">{{ spotifyPlayer.currentPosition | formatTime}}</span></ion-label>
 
         <ion-label range-right *ngIf="spotifyPlayer.durationS">{{spotifyPlayer.durationS | formatTime}}</ion-label>
@@ -20,8 +20,8 @@
 
     <ul id="nav" style="list-style: none;">
       <li><button ion-button icon-only clear (click)="spotifyPlayer.togglePlayPause()">
-        <ion-icon name="md-play" *ngIf="!spotifyPlayer.isPlaying"></ion-icon>
-        <ion-icon name="md-pause" *ngIf="spotifyPlayer.isPlaying"></ion-icon>
+        <ion-icon name="md-play" *ngIf="!spotifyPlayer.isPlaying || spotifyPlayer.isPaused"></ion-icon>
+        <ion-icon name="md-pause" *ngIf="spotifyPlayer.isPlaying || !spotifyPlayer.isPaused"></ion-icon>
       </button></li>
     </ul>
   </ng-container>
