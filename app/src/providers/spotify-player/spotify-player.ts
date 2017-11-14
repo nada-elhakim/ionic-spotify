@@ -30,15 +30,16 @@ export class SpotifyPlayerProvider {
   }
 
   setTrack(track, audioPlayer?) {
-
+    console.log(track);
     this.track = track;
     if (audioPlayer) {
       console.log(audioPlayer);
-      console.log('free account');
       this.audioPlayer = audioPlayer.nativeElement;
       this.previewUrl = track.preview_url !== "" ? track.preview_url : null;
+      console.log('preview url', this.previewUrl);
     }
     this.durationS = this.track.duration_ms / 1000;
+    console.log(this.durationS);
     this.trackURI = this.track ? this.track.uri : '';
   }
 
@@ -71,8 +72,13 @@ export class SpotifyPlayerProvider {
         });
       });
     } else {
-      this.previewUrl && this.audioPlayer.play();
-      this.isPlaying = true;
+      if (this.previewUrl && this.audioPlayer) {
+        console.log('preview present');
+          this.audioPlayer.play();
+          this.initAudioPlayerEvents();
+          this.isPlaying = true;
+      }
+
     }
   }
 
@@ -80,7 +86,7 @@ export class SpotifyPlayerProvider {
     var onProgress = () => {
       this.spotify.getPosition().then((positionMs) => {
         console.log(positionMs);
-        this.currentPosition = positionMs/1000;
+        this.currentPosition = Math.floor(positionMs/1000);
         if (this.currentPosition === this.track.duration_ms) {
           // TODO: emit an event and clear timeout
           this.resetPlayer();
@@ -118,7 +124,11 @@ export class SpotifyPlayerProvider {
 
   initAudioPlayerEvents() {
     console.log('init audio events');
-    
+    this.audioPlayer.ontimeupdate = () => {
+      this.currentPosition = Math.floor(this.audioPlayer.currentTime);
+      console.log(this.audioPlayer.currentTime);
+    }
+
   }
 
   resetPlayer() {

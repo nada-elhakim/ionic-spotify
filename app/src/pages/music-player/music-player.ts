@@ -16,8 +16,8 @@ import {SpotifyPlayerProvider} from "../../providers/spotify-player/spotify-play
   templateUrl: 'music-player.html',
 })
 export class MusicPlayerPage implements OnInit {
-  track;
-  profile;
+  track: any;
+  profile: any;
   @ViewChild('audioPlayer') audioPlayer: ElementRef;
 
   constructor(
@@ -32,11 +32,8 @@ export class MusicPlayerPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    console.log('will enter');
-    this.track = this.navParams.get('track');
-    this.profile = this.navParams.get('profile');
-    let audioPlayer = this.profile.product !== 'premium' ? this.audioPlayer : null;
-    this.spotifyPlayer.setTrack(this.track, audioPlayer);
+    this.getNavParams();
+    this.spotifyPlayer.setTrack(this.track, this.audioPlayer);
   }
 
   ionViewWillLeave() {
@@ -47,4 +44,8 @@ export class MusicPlayerPage implements OnInit {
     console.log('ionViewDidLoad MusicPlayerPage');
   }
 
+  getNavParams() {
+    this.track = this.navParams.get('track');
+    this.profile = this.navParams.get('profile');
+  }
 }

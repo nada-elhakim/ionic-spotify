@@ -1,26 +1,32 @@
 <ion-header>
-  <ion-toolbar class="default-header">
-    <div class="headerTitle">PLAYLIST</div>
-  </ion-toolbar>
+
+  <ion-navbar>
+    <ion-title>music player</ion-title>
+  </ion-navbar>
+
 </ion-header>
 
 <ion-content>
 
 
+  <ng-container *ngIf="(accountType !=='premium' && track?.preview_url) || accountType ==='premium'">
+    <ion-item no-lines>
+      <ion-range min="0" [max]="spotifyPlayer.durationS" [(ngModel)]="spotifyPlayer.currentPosition" color="primary">
+        <ion-label range-left *ngIf="spotifyPlayer.currentPosition">{{ spotifyPlayer.currentPosition }}</ion-label>
+        <!--<ion-label range-right *ngIf="musicservice.audioPlayer.duration">{{secondsToTime(musicservice.audioPlayer.duration) | date:'mm:ss'}}</ion-label>-->
+      </ion-range>
+    </ion-item>
 
-  <ion-item no-lines *ngIf="spotifyPlayer.track">
-    <ion-range min="0" [max]="spotifyPlayer.durationS" [(ngModel)]="spotifyPlayer.currentPosition" color="primary">
-      <ion-label range-left *ngIf="spotifyPlayer.currentPosition">{{ spotifyPlayer.currentPosition }}</ion-label>
-      <!--<ion-label range-right *ngIf="musicservice.audioPlayer.duration">{{secondsToTime(musicservice.audioPlayer.duration) | date:'mm:ss'}}</ion-label>-->
-    </ion-range>
-  </ion-item>
+    <ul id="nav" style="list-style: none;">
+      <li><button ion-button icon-only clear (click)="spotifyPlayer.togglePlayPause()">
+        <ion-icon name="md-play" *ngIf="!spotifyPlayer.isPlaying"></ion-icon>
+        <ion-icon name="md-pause" *ngIf="spotifyPlayer.isPlaying"></ion-icon>
+      </button></li>
+    </ul>
+  </ng-container>
 
-  <ul  id="nav">
-    <li ><button ion-button icon-only clear (click)="spotifyPlayer.togglePlayPause()">
-      <ion-icon name="md-play" *ngIf="!spotifyPlayer.isPlaying"></ion-icon>
-      <ion-icon name="md-pause" *ngIf="spotifyPlayer.isPlaying"></ion-icon>
-    </button></li>
-  </ul>
 
-  <audio *ngIf="accountType !=='premium'" [src]="spotifyPlayer.previewUrl" #audioPlayer></audio>
+
+  <audio [src]="spotifyPlayer.previewUrl" #audioPlayer></audio>
+  <p *ngIf="accountType !=='premium' && !track?.preview_url">Preview not available for this track</p>
 </ion-content>
