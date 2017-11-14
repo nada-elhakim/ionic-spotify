@@ -23,6 +23,7 @@ export class SpotifyPlayerProvider {
   isPlaying = false;
   isPaused = false;
   currentPosition = 0;
+  tappedPosition = 0;
   durationS = 0;
   progress;
   spotify = cordova.plugins.spotify;
@@ -32,15 +33,19 @@ export class SpotifyPlayerProvider {
   setTrack(track, audioPlayer?) {
     console.log(track);
     this.track = track;
+    // TODO: check number of digits
+    this.durationS = this.track.duration_ms / 10000;
+    this.trackURI = this.track ? this.track.uri : '';
+
     if (audioPlayer) {
       console.log(audioPlayer);
       this.audioPlayer = audioPlayer.nativeElement;
+      this.durationS = 30;
+      console.log(this.durationS);
       this.previewUrl = track.preview_url !== "" ? track.preview_url : null;
       console.log('preview url', this.previewUrl);
     }
-    this.durationS = this.track.duration_ms / 1000;
-    console.log(this.durationS);
-    this.trackURI = this.track ? this.track.uri : '';
+
   }
 
   togglePlayPause() {
@@ -86,7 +91,7 @@ export class SpotifyPlayerProvider {
     var onProgress = () => {
       this.spotify.getPosition().then((positionMs) => {
         console.log(positionMs);
-        this.currentPosition = Math.floor(positionMs/1000);
+        this.currentPosition = positionMs/1000;
         if (this.currentPosition === this.track.duration_ms) {
           // TODO: emit an event and clear timeout
           this.resetPlayer();
@@ -111,9 +116,22 @@ export class SpotifyPlayerProvider {
 
   }
 
-  seekTo(positionMs) {
-    console.log(positionMs);
-    this.spotify.seekTo(positionMs);
+  seekTo(progress) {
+    // console.log(progress);
+    // console.log('current position', this.currentPosition);
+    // console.log('progress value', progress.value);
+    // console.log('tapped position', this.tappedPosition);
+    if (this.currentPosition != this.tappedPosition) {
+      console.log('seek track', this.currentPosition);
+      // TODO: check if can play through
+      if (this.accountType === 'premium') {
+        this.spotify.seekTo(this.currentPosition);
+      } else {
+        this.audioPlayer.currentTime = this.currentPosition;
+      }
+
+    }
+
   }
 
   resume() {
@@ -123,12 +141,13 @@ export class SpotifyPlayerProvider {
   }
 
   initAudioPlayerEvents() {
-    console.log('init audio events');
     this.audioPlayer.ontimeupdate = () => {
-      this.currentPosition = Math.floor(this.audioPlayer.currentTime);
-      console.log(this.audioPlayer.currentTime);
-    }
+      this.tappedPosition = this.currentPosition = this.audioPlayer.currentTime;
+    };
 
+    this.audioPlayer.onended = () => {
+      this.isPlaying = false;
+    };
   }
 
   resetPlayer() {
@@ -139,5 +158,4 @@ export class SpotifyPlayerProvider {
       this.currentPosition = 0;
     });
   }
-
 }
