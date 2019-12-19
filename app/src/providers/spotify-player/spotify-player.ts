@@ -10,8 +10,6 @@ declare var cordova;
 
   See https://angular.io/guide/dependency-injection for more info on providers
   and Angular DI.
-
- shawn.sridhar@gmail.com   /    !upwork
 */
 @Injectable()
 export class SpotifyPlayerProvider {
